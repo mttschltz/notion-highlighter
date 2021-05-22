@@ -1,3 +1,4 @@
 node_modules/
 addon/popup/index.js
 addon/background_scripts/index.js
+addon/options/index.js
