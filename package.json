@@ -8,6 +8,7 @@
   },
   "license": "MPL-2.0",
   "devDependencies": {
+    "webextension-polyfill": "^0.8.0",
     "webpack": "^2.3.2"
   },
   "dependencies": {
