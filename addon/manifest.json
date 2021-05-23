@@ -1,4 +1,9 @@
 {
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "temp-id-for@dev-using-storage.com"
+        }
+    },      
     "manifest_version": 2,
     "name": "Webpack Example",
     "version": "0.0.1",
@@ -20,5 +25,8 @@
     },
     "background": {
         "scripts": ["background_scripts/index.js"]
-    }
+    },
+    "permissions": [
+		"storage"
+	]
 }
