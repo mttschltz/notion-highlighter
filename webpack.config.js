@@ -4,7 +4,6 @@ module.exports = {
     mode: 'production',
     entry: {
         background_scripts: "./background_scripts/background.js",
-        popup: "./popup/left-pad.js",
         options: "./options/options.js"
     },
     output: {

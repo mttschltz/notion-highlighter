@@ -13,7 +13,6 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "left-pad": "^1.1.1",
     "webext-options-sync": "^2.0.1"
   }
 }

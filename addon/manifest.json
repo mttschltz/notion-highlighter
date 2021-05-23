@@ -5,21 +5,14 @@
         }
     },      
     "manifest_version": 2,
-    "name": "Webpack Example",
+    "name": "Notion Highlighter",
     "version": "0.0.1",
-    "description": "A minimal example of how to use npm modules from within a WebExtension.",
+    "description": "Save highlights to Notion.",
     "icons": {
-        "32": "icons/leftpad-32.png"
+        "500": "icons/icon-500.png"
     },
     "options_ui": {
         "page": "options/options.html",
-        "browser_style": true,
-        "chrome_style": true
-    },
-    "browser_action": {
-        "default_icon": "icons/leftpad-32.png",
-        "default_title": "Left Pad",
-        "default_popup": "popup/left-pad.html",
         "browser_style": true,
         "chrome_style": true
     },
