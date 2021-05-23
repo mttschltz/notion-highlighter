@@ -19,6 +19,12 @@
     "background": {
         "scripts": ["background_scripts/index.js"]
     },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["highlighter/index.js"]
+        }
+    ],
     "permissions": [
 		"storage"
 	]
