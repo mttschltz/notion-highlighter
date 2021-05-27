@@ -26,6 +26,6 @@
         }
     ],
     "permissions": [
-		"storage"
+		"storage", "contextMenus"
 	]
 }
