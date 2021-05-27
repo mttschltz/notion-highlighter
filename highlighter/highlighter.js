@@ -1,10 +1,11 @@
 import shareThis from '../lib/share-this/core'
-import * as twitterSharer from "../lib/share-this/sharers/twitter";
+import * as notionSharer from "../lib/share-this/sharers/notion";
 
 console.log(`loading share-this`)
 
 const selectionShare = shareThis({
-    sharers: [ twitterSharer ]
+    sharers: [ notionSharer ],
+    highlight: true,
 });
 
 selectionShare.init();
