@@ -1,10 +1,10 @@
-require('./TextHighlighter.js')
+import shareThis from '../lib/share-this/core'
+import * as twitterSharer from "../lib/share-this/sharers/twitter";
 
-var hltr = new window.TextHighlighter(document.body, {
-    onBeforeHighlight: function (range) {
-        return window.confirm('Send to Notion?');
-    },
-    onAfterHighlight: function (range, highlights) {
-        // TODO: Send to Notion
-    },
+console.log(`loading share-this`)
+
+const selectionShare = shareThis({
+    sharers: [ twitterSharer ]
 });
+
+selectionShare.init();
