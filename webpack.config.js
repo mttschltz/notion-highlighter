@@ -10,5 +10,18 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "addon"),
         filename: "[name]/index.js"
-    }
+    },
+    module: {
+        rules: [
+          {
+            test: /\.less$/i,
+            loader: [
+              // compiles Less to CSS
+              "style-loader",
+              "css-loader",
+              "less-loader",
+            ],
+          },
+        ],
+      },
 };
