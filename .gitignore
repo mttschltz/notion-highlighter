@@ -3,3 +3,6 @@ addon/popup/index.js
 addon/background_scripts/index.js
 addon/options/index.js
 addon/highlighter/index.js
+addon/background_scripts/index.js.map
+addon/highlighter/index.js.map
+addon/options/index.js.map
