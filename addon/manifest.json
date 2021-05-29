@@ -26,6 +26,6 @@
         }
     ],
     "permissions": [
-		"storage", "contextMenus"
+		"storage", "contextMenus", "https://api.notion.com/*"
 	]
 }

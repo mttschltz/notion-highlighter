@@ -1,17 +1,29 @@
-import optionsStorage from '../options/options-storage.js';
 import shareThis from '../lib/share-this/core'
+import rangy from "../lib/rangy";
 import * as notionSharer from "../lib/share-this/sharers/notion";
 
+function handleResponse(message) {
+    console.log(`Message from the background script:  ${JSON.stringify(message)}`);
+}
+
+function handleError(error) {
+    console.log(`Error: ${error}`);
+}
+
+function notifyBackgroundPage(range) {
+    // TODO: when a block element ends... add a new line (or insert a separate paragraph into the notion page)
+    // TODO: Links
+    var sending = browser.runtime.sendMessage({
+        text: range.toString()
+    });
+    sending.then(handleResponse, handleError);
+}
+
 notionSharer.action = (event, item, range) => {
-    // event.preventDefault();
     console.log(`item`, item) // can't traverse this up to popover... only goes to ul for some reason... not in dom yet?
     console.log(`range`, range) 
 
-    // get credentials each time in case they are updated
-    optionsStorage.getAll().then(({ integrationToken, rootPageID }) => {
-        console.log(`integrationToken, rootPageID=${integrationToken} ${rootPageID}`)
-    })
-
+    notifyBackgroundPage(range);
 }
 
 const selectionShare = shareThis({
