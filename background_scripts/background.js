@@ -45,10 +45,30 @@ function handleMessage({text, title, url}, sender, sendResponse) {
         debugger;
     }).then((response) => {
         console.log('searchResponse=', response)
+        let updatePageID
         if (response.results && response.results.length > 0) {
-            console.log('Page already exists, results:', response)
-            return
+            const page = response.results[0]
+            updatePageID = page.id
+            if (!updatePageID) {
+                return
+            }
         }
+
+        const highlightBlocks = getHighlightBlocks(text)
+
+        if (updatePageID) {
+            return fetch(`https://api.notion.com/v1/blocks/${updatePageID}/children`, {
+                method: 'PATCH',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2021-05-13',
+                    'Authorization': `Bearer ${integrationToken}`,
+                },
+                body: getUpdatePageBody(highlightBlocks)
+            });
+        }
+
         return fetch('https://api.notion.com/v1/pages/', {
             method: 'POST',
             headers: {
@@ -57,7 +77,7 @@ function handleMessage({text, title, url}, sender, sendResponse) {
                 'Notion-Version': '2021-05-13',
                 'Authorization': `Bearer ${integrationToken}`,
             },
-            body: getBody(rootPageID, text, title, url)
+            body: getNewPageBody(rootPageID, title, url, highlightBlocks)
         });
     }).catch(e => {
         console.error('Create page error', e)
@@ -77,19 +97,56 @@ function handleMessage({text, title, url}, sender, sendResponse) {
 
 browser.runtime.onMessage.addListener(handleMessage)
 
-function getBody(rootPageID, text, title, url) {
+function getHighlightBlocks(text) {
+    return [{
+        "object": "block",
+        "type": "paragraph",
+        "paragraph": {
+            "text": [
+                {
+                    "type": "text",
+                    "text": {
+                        "content": '' // empty block
+                    }
+                },
+            ]
+        }
+    },
+    {
+        "object": "block",
+        "type": "paragraph",
+        "paragraph": {
+            "text": [
+                {
+                    "type": "text",
+                    "text": {
+                        "content": text
+                    }
+                }
+            ]
+        }
+    }]
+}
+
+function getUpdatePageBody(highlightBlocks) {
+    return JSON.stringify({
+        "children": highlightBlocks
+    })
+}
+
+ function getNewPageBody(rootPageID, title, url, highlightBlocks) {
     return JSON.stringify({
         "parent": {
             "page_id": rootPageID
         },
         "properties": {
-                "title": [
-                    {
-                        "text": {
-                            "content": title
-                        }
+            "title": [
+                {
+                    "text": {
+                        "content": title
                     }
-                ]
+                }
+            ]
         },
         "children": [
             {
@@ -114,35 +171,7 @@ function getBody(rootPageID, text, title, url) {
                         }
                     ]
                 }
-            },
-            {
-                "object": "block",
-                "type": "paragraph",
-                "paragraph": {
-                    "text": [
-                        {
-                            "type": "text",
-                            "text": {
-                                "content": '' // empty block
-                            }
-                        },
-                    ]
-                }
-            },
-            {
-                "object": "block",
-                "type": "paragraph",
-                "paragraph": {
-                    "text": [
-                        {
-                            "type": "text",
-                            "text": {
-                                "content": text
-                            }
-                        }
-                    ]
-                }
-            }
+            }, ...highlightBlocks
         ]
     })
 }
