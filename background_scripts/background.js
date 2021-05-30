@@ -48,7 +48,6 @@ function handleMessage({text, title, url}, sender, sendResponse) {
             const page = response.results[0]
             let existingTitle
             try {
-                debugger
                 existingTitle = page.properties.title.title[0].text.content
             } catch (e) {
                 console.error(`title not found in first page`, page)
