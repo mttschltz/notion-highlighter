@@ -13,7 +13,42 @@ function handleMessage({text, title, url}, sender, sendResponse) {
         return
     }
     // get credentials each time in case they are updated
-    optionsStorage.getAll().then(({ integrationToken, rootPageID }) => {
+    let integrationToken
+    let rootPageID
+    optionsStorage.getAll()
+        .then(({ integrationToken: it, rootPageID: rpID }) => {
+            integrationToken = it
+            rootPageID = rpID
+            return fetch('https://api.notion.com/v1/search', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2021-05-13',
+                    'Authorization': `Bearer ${integrationToken}`,
+                },
+                body: JSON.stringify({
+                    "query": title,
+                    "sort": {
+                        "direction": "descending",
+                        "timestamp": "last_edited_time"
+                    }
+                })
+            }); 
+    }).catch(e => {
+        console.error('Search error', e)
+        debugger;
+    }).then((rawResponse) => {
+        return rawResponse.json();
+    }).catch(e => {
+        console.error('Parsing JSON from search response error', e)
+        debugger;
+    }).then((response) => {
+        console.log('searchResponse=', response)
+        if (response.results && response.results.length > 0) {
+            console.log('Page already exists, results:', response)
+            return
+        }
         return fetch('https://api.notion.com/v1/pages/', {
             method: 'POST',
             headers: {
@@ -21,16 +56,22 @@ function handleMessage({text, title, url}, sender, sendResponse) {
                 'Content-Type': 'application/json',
                 'Notion-Version': '2021-05-13',
                 'Authorization': `Bearer ${integrationToken}`,
-                'Access-Control-Allow-Origin': 'https://api.notion.com'
             },
             body: getBody(rootPageID, text, title, url)
-            });
+        });
     }).catch(e => {
+        console.error('Create page error', e)
         debugger;
     }).then((rawResponse) => {
-        return rawResponse.json();
-    }).then((content) => {
-        console.log(content);
+        if (rawResponse) {
+            return rawResponse.json();
+        }
+        return Promise.resolved()
+    }).catch(e => {
+        console.error('Parsing JSON from create page response error', e)
+        debugger;
+    }).then((response) => {
+        console.log('Create page response', response);
     })
 }
 
