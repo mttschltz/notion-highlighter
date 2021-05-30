@@ -46,9 +46,16 @@ function handleMessage({text, title, url}, sender, sendResponse) {
         let updatePageID
         if (response.results && response.results.length > 0) {
             const page = response.results[0]
-            updatePageID = page.id
-            if (!updatePageID) {
-                return
+            let existingTitle
+            try {
+                debugger
+                existingTitle = page.properties.title.title[0].text.content
+            } catch (e) {
+                console.error(`title not found in first page`, page)
+            }
+            
+            if (title === existingTitle) {
+                updatePageID = page.id
             }
         }
 
