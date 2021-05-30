@@ -7,8 +7,9 @@ browser.contextMenus.create({
     contexts: ["all"],
 });
 
-function handleMessage(request, sender, sendResponse) {
-    if (!request.text) {
+function handleMessage({text, title, url}, sender, sendResponse) {
+    if (!text) {
+        console.log('Empty range')
         return
     }
     // get credentials each time in case they are updated
@@ -22,7 +23,7 @@ function handleMessage(request, sender, sendResponse) {
                 'Authorization': `Bearer ${integrationToken}`,
                 'Access-Control-Allow-Origin': 'https://api.notion.com'
             },
-            body: getBody(rootPageID, request.text)
+            body: getBody(rootPageID, text, title, url)
             });
     }).catch(e => {
         debugger;
@@ -35,7 +36,7 @@ function handleMessage(request, sender, sendResponse) {
 
 browser.runtime.onMessage.addListener(handleMessage)
 
-function getBody(rootPageID, text) {
+function getBody(rootPageID, text, title, url) {
     return JSON.stringify({
         "parent": {
             "page_id": rootPageID
@@ -44,7 +45,7 @@ function getBody(rootPageID, text) {
                 "title": [
                     {
                         "text": {
-                            "content": document.title
+                            "content": title
                         }
                     }
                 ]
@@ -58,7 +59,30 @@ function getBody(rootPageID, text) {
                         {
                             "type": "text",
                             "text": {
-                                "content": `URL: ${document.location.href}`
+                                "content": `URL: `
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": url,
+                                "link": {
+                                    "url": url
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {
+                    "text": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": '' // empty block
                             }
                         },
                     ]

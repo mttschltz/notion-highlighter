@@ -14,7 +14,9 @@ function notifyBackgroundPage(range) {
     // TODO: when a block element ends... add a new line (or insert a separate paragraph into the notion page)
     // TODO: Links
     var sending = browser.runtime.sendMessage({
-        text: range.toString()
+        text: range.toString(),
+        title: document.title,
+        url: document.location.href
     });
     sending.then(handleResponse, handleError);
 }
