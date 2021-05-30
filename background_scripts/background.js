@@ -37,12 +37,10 @@ function handleMessage({text, title, url}, sender, sendResponse) {
             }); 
     }).catch(e => {
         console.error('Search error', e)
-        debugger;
     }).then((rawResponse) => {
         return rawResponse.json();
     }).catch(e => {
         console.error('Parsing JSON from search response error', e)
-        debugger;
     }).then((response) => {
         console.log('searchResponse=', response)
         let updatePageID
@@ -81,7 +79,6 @@ function handleMessage({text, title, url}, sender, sendResponse) {
         });
     }).catch(e => {
         console.error('Create page error', e)
-        debugger;
     }).then((rawResponse) => {
         if (rawResponse) {
             return rawResponse.json();
@@ -89,7 +86,6 @@ function handleMessage({text, title, url}, sender, sendResponse) {
         return Promise.resolved()
     }).catch(e => {
         console.error('Parsing JSON from create page response error', e)
-        debugger;
     }).then((response) => {
         console.log('Create page response', response);
     })

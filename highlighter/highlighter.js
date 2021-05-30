@@ -10,22 +10,22 @@ function handleError(error) {
     console.log(`Error: ${error}`);
 }
 
-function notifyBackgroundPage(range) {
+function notifyBackgroundPage(text) {
     // TODO: when a block element ends... add a new line (or insert a separate paragraph into the notion page)
     // TODO: Links
     var sending = browser.runtime.sendMessage({
-        text: range.toString(),
+        text,
         title: document.title,
         url: document.location.href
     });
     sending.then(handleResponse, handleError);
 }
 
-notionSharer.action = (event, item, range) => {
+notionSharer.action = (event, item, text) => {
     console.log(`item`, item) // can't traverse this up to popover... only goes to ul for some reason... not in dom yet?
-    console.log(`range`, range) 
+    console.log(`text`, text) 
 
-    notifyBackgroundPage(range);
+    notifyBackgroundPage(text);
 }
 
 const selectionShare = shareThis({
